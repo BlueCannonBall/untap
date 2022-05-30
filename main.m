@@ -17,7 +17,8 @@ uint64_t get_utime() {
 size_t type_to_idx(CGEventType type) {
     switch (type) {
         default: {
-            return kCGEventNull;
+            NSLog(@"type_to_idx: Invalid event");
+            exit(1);
         }
 
         case kCGEventKeyDown: {
