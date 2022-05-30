@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     memset(time_table[1], 0, UINT16_MAX * 8);
 
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    CFRunLoopSourceRef runloop_source;
+    CFRunLoopSourceRef run_loop_source;
 
     CFMachPortRef event_tap = CGEventTapCreate(
         kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, kCGEventMaskForAllEvents, event_cb, &time_table);
@@ -67,17 +67,17 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    runloop_source =
+    run_loop_source =
         CFMachPortCreateRunLoopSource(kCFAllocatorDefault, event_tap, 0);
 
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), runloop_source, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), run_loop_source, kCFRunLoopCommonModes);
 
     CGEventTapEnable(event_tap, true);
 
     CFRunLoopRun();
 
     CFRelease(event_tap);
-    CFRelease(runloop_source);
+    CFRelease(run_loop_source);
     [pool release];
     free(time_table[0]);
     free(time_table[1]);
