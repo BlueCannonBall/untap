@@ -33,17 +33,14 @@ size_t type_to_idx(CGEventType type) {
 CGEventRef event_cb(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* refcon) {
     if (type == kCGEventKeyDown || type == kCGEventKeyUp) {
         uint64_t*(*time_table)[2] = refcon;
-        uint64_t utime = get_utime();
+        uint64_t time = get_utime();
 
-        CGEventRef ret;
-        if (utime - (*time_table)[type_to_idx(type)][CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode)] < min_gap) {
-            ret = NULL;
+        if (time - (*time_table)[type_to_idx(type)][CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode)] < min_gap) {
+            return NULL;
         } else {
-            ret = event;
+            (*time_table)[type_to_idx(type)][CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode)] = time;
+            return event;
         }
-
-        (*time_table)[type_to_idx(type)][CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode)] = utime;
-        return ret;
     } else {
         return event;
     }
